@@ -74,7 +74,7 @@ rf = RandomForestClassifier(
   n_estimators=100,
   max_features='sqrt',
   max_depth=None,
-  min_samples_split=50,
+  min_samples_split=25,
   random_state=42,
   n_jobs=1
 )
@@ -87,7 +87,12 @@ end_time = time.time()
 print(f"Completed the training in {(end_time - start_time):.2f}s")
 
 # Calculating the predictions
+pred_start = time.perf_counter_ns()
 y_pred = rf.predict(X_test)
+pred_end = time.perf_counter_ns()
+
+pred_time = (pred_end - pred_start) / 1000
+average_pred_time = pred_time / X_test.shape[0]
 
 # Calculating the stats
 report = classification_report(y_test, y_pred)
@@ -95,6 +100,7 @@ score = accuracy_score(y_test, y_pred)
 
 # Printing the stats
 print(f"\nAccuracy: {score * 100:.2f}%")
+print(f"Prediction time per sample {average_pred_time:.2f} microseconds")
 print("Classification Report:")
 print(report)
 
